@@ -135,8 +135,24 @@ def get_summary(hours):
     sunday = today + timedelta(6-today.weekday())
 
     # Find all the hours of this week
+    minutes = 0
+    for h in hours:
+        if h['datetime'].date() >= monday and h['datetime'].date() <= sunday:
+            minutes += h['minutes']
 
-    print today, monday, sunday
+    print 'TOTAL MINUTES', minutes
+
+
+    return {
+        'today': today,
+        'monday': monday,
+        'sunday': sunday,
+        'minutes': minutes,
+        'hours_done': minutes/float(60),
+        'hours_todo': (WEEKLY_GOAL * 60 - minutes)/float(60),
+        'days_left': 4 - today.weekday(),
+        'hours_per_day_todo': (WEEKLY_GOAL * 60 - minutes)/float(60) / (4 - today.weekday()),
+    }
 
 # -----------------------------------------------------------------------------
 # App

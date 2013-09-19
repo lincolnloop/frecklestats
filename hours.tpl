@@ -9,9 +9,16 @@
 </head>
 <body>
 
-    <h1>
-        Hours
-    </h1>
+
+<div style="font-size: 30px; padding: 40px;">
+	You worked <strong>{{ summary.hours_done }}</strong> hours this week. There are
+	<strong>{{ summary.hours_todo }}</strong> hours to do. That is {{ summary.hours_per_day_todo }} hours
+	per day for the next {{ summary.days_left }} days.
+</div>
+
+<hr/>
+
+{{ summary }}
 
 <ul>
 {% for id, name in projects.iteritems() %}
@@ -28,9 +35,6 @@
 </ul>
 
 <hr/>
-
-You worked <strong>12 hours</strong> this week. <strong>18 more hours</strong> to do
-in the next <strong>3 days</strong> (<strong>6 hours per day</strong>).
 
 </body>
 </html>
