@@ -4,7 +4,7 @@
     <meta charset=utf-8 />
     <title>Hours</title>
     <style type="text/css">
-
+    pre{ margin: 0;}
     </style>
 </head>
 <body>
@@ -23,10 +23,7 @@
 
 <ul>
 {% for h in hours %}
-    <li>
-        {{ h.datetime }}: {{ h.minute }} ({{ h.project }})
-
-    </li>
+    <li><pre>{{ h.datetime }}: {{ h.minutes }}	({{ h.project }})</pre></li>
 {% endfor %}
 </ul>
 

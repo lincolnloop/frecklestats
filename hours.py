@@ -2,6 +2,8 @@
 
 import requests
 import json
+from arrow import utcnow, Arrow
+from datetime import timedelta
 from os import path, environ
 from bottle import Bottle, static_file, request
 from bottle.ext import memcache
@@ -49,6 +51,8 @@ CACHE_KEY_DATA = 'hours_{}_data'.format(FRECKLE_USER_ID)
 def get_data(mc):
     projects = mc.get(CACHE_KEY_PROJ)
     hours = mc.get(CACHE_KEY_DATA)
+
+    print 'xxxxxxxxxxxxxxxxxx', projects, hours
 
     if projects and hours and not 'force' in request.GET:
         print('*** Using cached data')
@@ -103,7 +107,7 @@ def get_data(mc):
         for h in hours:
             h = h['entry']
             hour_list.append({
-                'datetime': h['created_at'],
+                'datestring': h['created_at'],
                 'minutes': h['minutes'],
                 'project': project_list[h['project_id']]
             })
@@ -118,11 +122,21 @@ def get_data(mc):
 
     hour_list.reverse()
 
+    print len(str(hour_list))
+
     mc.set(CACHE_KEY_PROJ, project_list)
     mc.set(CACHE_KEY_DATA, hour_list)
 
     return project_list, hour_list
 
+def get_summary(hours):
+    today = utcnow().date()
+    monday = today - timedelta(today.weekday())
+    sunday = today + timedelta(6-today.weekday())
+
+    # Find all the hours of this week
+
+    print today, monday, sunday
 
 # -----------------------------------------------------------------------------
 # App
@@ -137,11 +151,23 @@ def send_static(filename):
 
 @app.route('/')
 def index(mc):
+
+    # Get our data, it might be cached
     projects, hours = get_data(mc)
+
+     # Datetime objects are JSON date strings, convert them to
+     # Python objects
+    for h in hours:
+        h['datetime'] = Arrow.strptime(h['datestring'], '%Y-%m-%dT%H:%M:%SZ')
+
+    # Some additional summary
+    summary = get_summary(hours)
+
     template = Template(open('hours.tpl').read())
     return template.render(
         projects=projects,
         hours=hours,
+        summary=summary,
     )
 
 app.run(host='localhost', port=8080)
