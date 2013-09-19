@@ -1,3 +1,4 @@
 bottle
 bottle-memcache
 requests
+jinja2

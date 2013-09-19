@@ -3,8 +3,9 @@
 import requests
 import json
 from os import path, environ
-from bottle import Bottle, template, static_file, request
+from bottle import Bottle, static_file, request
 from bottle.ext import memcache
+from jinja2 import Template
 
 # -----------------------------------------------------------------------------
 # Settings
@@ -115,6 +116,8 @@ def get_data(mc):
 
     _get_hours(requests.get(FRECKLE__HOURS_URL, headers=headers))
 
+    hour_list.reverse()
+
     mc.set(CACHE_KEY_PROJ, project_list)
     mc.set(CACHE_KEY_DATA, hour_list)
 
@@ -135,10 +138,10 @@ def send_static(filename):
 @app.route('/')
 def index(mc):
     projects, hours = get_data(mc)
-    return template('hours',
+    template = Template(open('hours.tpl').read())
+    return template.render(
         projects=projects,
         hours=hours,
-        last_update='',
     )
 
 app.run(host='localhost', port=8080)

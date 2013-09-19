@@ -11,12 +11,26 @@
 
     <h1>
         Hours
-        <small>Last update: {{ last_update }}</small>
     </h1>
 
-    <pre>{{ projects }}</pre>
-    <hr/>
-    <pre>{{ hours }}</pre>
+<ul>
+{% for id, name in projects.iteritems() %}
+    <li>{{ name }}</li>
+{% endfor %}
+</ul>
+
+<hr/>
+
+<ul>
+{% for h in hours %}
+    <li>
+        {{ h.datetime }}: {{ h.minute }} ({{ h.project }})
+
+    </li>
+{% endfor %}
+</ul>
+
+<hr/>
 
 You worked <strong>12 hours</strong> this week. <strong>18 more hours</strong> to do
 in the next <strong>3 days</strong> (<strong>6 hours per day</strong>).
