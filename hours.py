@@ -181,10 +181,18 @@ def index(mc):
     # Some additional summary
     summary = get_summary(hours)
 
+    hours_project = {}
+    for h in hours:
+        if not h['project'] in hours_project:
+            hours_project[h['project']] = []
+        hours_project[h['project']].append(h['minutes'])
+
+
     template = Template(open('hours.tpl').read())
     return template.render(
         projects=projects,
         hours=hours,
+        hours_project=hours_project,
         summary=summary,
     )
 
