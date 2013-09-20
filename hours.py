@@ -142,6 +142,8 @@ def get_summary(hours):
 
     print 'TOTAL MINUTES', minutes
 
+    left = (4 - today.weekday())
+    left = left == 0 and 1 or left
 
     return {
         'today': today,
@@ -151,7 +153,7 @@ def get_summary(hours):
         'hours_done': minutes/float(60),
         'hours_todo': (WEEKLY_GOAL * 60 - minutes)/float(60),
         'days_left': 4 - today.weekday(),
-        'hours_per_day_todo': (WEEKLY_GOAL * 60 - minutes)/float(60) / (4 - today.weekday()),
+        'hours_per_day_todo': (WEEKLY_GOAL * 60 - minutes)/float(60) / left,
     }
 
 # -----------------------------------------------------------------------------
