@@ -2,6 +2,7 @@
 
 import requests
 import json
+from math import ceil, floor
 from arrow import utcnow, Arrow
 from datetime import timedelta
 from os import path, environ
@@ -142,8 +143,11 @@ def get_summary(hours):
 
     print 'TOTAL MINUTES', minutes
 
-    left = (4 - today.weekday())
+    left = (5 - today.weekday())
     left = left == 0 and 1 or left
+
+    todo_day = (WEEKLY_GOAL * 60 - minutes)/float(60) / left
+    todo_day = ceil(todo_day*10)/10
 
     return {
         'today': today,
@@ -152,8 +156,8 @@ def get_summary(hours):
         'minutes': minutes,
         'hours_done': minutes/float(60),
         'hours_todo': (WEEKLY_GOAL * 60 - minutes)/float(60),
-        'days_left': 4 - today.weekday(),
-        'hours_per_day_todo': (WEEKLY_GOAL * 60 - minutes)/float(60) / left,
+        'days_left': left,
+        'hours_per_day_todo': todo_day,
     }
 
 # -----------------------------------------------------------------------------
