@@ -4,7 +4,7 @@ import requests
 import json
 from math import ceil, floor
 from arrow import utcnow, Arrow
-from datetime import timedelta
+from datetime import timedelta, datetime
 from os import path, environ
 from bottle import Bottle, static_file, request
 from bottle.ext import memcache
@@ -143,7 +143,10 @@ def get_summary(hours):
 
     print 'TOTAL MINUTES', minutes
 
-    left = (5 - today.weekday())
+    # If its after 15:00 consider teh day as done, we have one less remaining day
+    weekday = datetime.now().hour < 15 and 5 or 4
+
+    left = (weekday - today.weekday())
     left = left == 0 and 1 or left
 
     todo_day = (WEEKLY_GOAL * 60 - minutes)/float(60) / left
